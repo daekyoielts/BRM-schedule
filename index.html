@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CD WJL 6월 근무 스케줄 신청서</title>
+<title>CD BRM 6월 근무 스케줄 신청서</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
 
@@ -488,9 +488,8 @@
 
 <div class="card" id="formCard">
   <div class="card-header">
-    <h1>CD WJL 6월 근무 스케줄 신청서</h1>
+    <h1>CD BRM 6월 근무 스케줄 신청서</h1>
     <p>근무 가능한 날짜를 클릭하고 시간대를 선택해 주세요.<br>여러 날짜를 중복 선택할 수 있습니다.</p>
-    <p style="margin-top:10px;font-size:12px;opacity:0.9;">※ 6월 한 달간 월요일 포함 매일 운영됩니다.</p>
     <p style="margin-top:6px;font-size:12px;opacity:0.9;">※ 5/15 금요일까지 제출 부탁드립니다.</p>
   </div>
 
@@ -602,7 +601,6 @@
       const isSun = colIndex === 0;
       const isSat = colIndex === 6;
       const isHoliday = !!holidays[d];
-      const isDisabled = (d === 3 || d === 6); // 공휴일 비활성화 여부 → 활성 유지
 
       const cell = document.createElement('div');
       cell.className = 'cal-cell';
@@ -610,7 +608,14 @@
       const btn = document.createElement('button');
       btn.className = 'day-btn' + (isSun ? ' sun' : '') + (isSat ? ' sat' : '') + (isHoliday ? ' holiday' : '');
       btn.id = 'day-' + d;
-      btn.onclick = () => openPopup(d);
+
+      // 금=5, 토=6, 일=0 만 활성화
+      const allowedCols = [5, 6, 0];
+      if (!allowedCols.includes(colIndex)) {
+        btn.disabled = true;
+      } else {
+        btn.onclick = () => openPopup(d);
+      }
 
       const numSpan = document.createElement('span');
       numSpan.className = 'day-num';
@@ -790,11 +795,11 @@
     btn.textContent = '제출 중...';
     btn.disabled = true;
 
-    fetch('https://script.google.com/macros/s/AKfycbx3PKQEgVGsSMK_kC10s1Y-D4s6yndtnwK8iy-DCibz6MTI2JhEzpQuGSuxXscDRgbE/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbzjk9puFedd0muChhUU1e0MrTmAE7zXRJXWxHfkAT5Q_6ko2MNkZpkg4Y2bpGV1lTSW/exec', {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, site: 'WJL', schedules })
+      body: JSON.stringify({ name, site: 'BRM', schedules })
     })
     .then(() => {
       document.getElementById('formCard').style.display = 'none';
